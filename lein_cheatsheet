@@ -1,0 +1,5 @@
+lein new app <project> -> creates a new project
+lein run -> run the project
+lein test -> run the tests
+lein uberjar -> creates a jar from the project (/target)
+lein repl -> opens a repl
