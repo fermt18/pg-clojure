@@ -5,6 +5,6 @@
             :url "https://www.eclipse.org/legal/epl-2.0/"}
   :dependencies [[org.clojure/clojure "1.10.0"]
                 [org.clojure/algo.monads "0.1.6"]]
-  :main ^:skip-aot tictactoe.core
+  :main ^:skip-aot utread.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}})

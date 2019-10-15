@@ -1,0 +1,12 @@
+-------------------------------------------------------------------------------
+Test set: com.mango.cms.storage.api.S3ConfigurationTest
+-------------------------------------------------------------------------------
+Tests run: 2, Failures: 0, Errors: 2, Skipped: 0, Time elapsed: 18.773 sec <<< FAILURE! - in com.mango.cms.storage.api.S3ConfigurationTest
+testLoadSchedulerConfiguration(com.mango.cms.storage.api.S3ConfigurationTest)  Time elapsed: 18.773 sec  <<< ERROR!
+com.amazonaws.SdkClientException: Unable to find a region via the region provider chain. Must provide an explicit region in the builder or setup environment to supply a region.
+	at com.mango.cms.storage.api.S3ConfigurationTest.testLoadSchedulerConfiguration(S3ConfigurationTest.java:95)
+
+testLoadConfiguration(com.mango.cms.storage.api.S3ConfigurationTest)  Time elapsed: 11.034 sec  <<< ERROR!
+com.amazonaws.SdkClientException: Unable to find a region via the region provider chain. Must provide an explicit region in the builder or setup environment to supply a region.
+	at com.mango.cms.storage.api.S3ConfigurationTest.testLoadConfiguration(S3ConfigurationTest.java:78)
+
