@@ -4,27 +4,24 @@
 
 
 (defn get-file-extension [filename]
-  (last (str/split filename #"\.")))
+  ;(last (str/split filename #"\."))
+  (-> filename
+      (str/split #"\.")
+      last))
 
 
-(defn get-execution-time-with-errors [line]
+(defn get-execution-time-from-test [line]
   (let [commaseparated (str/split line #" ")]
     (if (> (count commaseparated) 4)
       (Double. (nth commaseparated 4))
-      0.0)
-    ))
+      0.0)))
 
-(defn get-execution-time [line]
+
+(defn get-execution-time-from-header [line]
   (let [commaseparated (str/split line #",")]
     (if (> (count commaseparated) 4)
       (Double. (nth (str/split (nth commaseparated 4) #" ") 3))
-      (get-execution-time-with-errors line))
-    ))
-
-
-(defn get-all-files-from-folder [folder]
-  ;; lazy sequence in the file-seq collection that return true for the predicate
-  (filter #(.isFile %) (file-seq (io/file folder))))
+      (get-execution-time-from-test line)))) ; not a header
 
 
 (defn get-all-txt-files-from-sequence [file-sequence]
@@ -35,7 +32,8 @@
 
 
 (defn get-all-reports-from-folder [folder]
-  (get-all-txt-files-from-sequence (get-all-files-from-folder folder)))
+  (get-all-txt-files-from-sequence 
+    (filter #(.isFile %) (file-seq (io/file folder)))))
 
 
 (defn find-string-in-line [line string]
@@ -44,30 +42,24 @@
     nil))
 
 
-(def counter 0)
-(defn process-line [line]
-
-  (let [timer (get-execution-time line)]
-    (println line)
-    (def counter (+ counter timer)))
-  )
-
-
-(defn loop-over-file [file string]
-  (with-open [rdr (io/reader file)]
-    (doseq [line (line-seq rdr)]
-      (let [finding (find-string-in-line line string)]
-        (if (not (= finding nil))
-          (process-line finding)))
-      )))
-
-
 (defn -main
   "Main function"
   [& args]
+  (def counter 0)
   (def reports (get-all-reports-from-folder (first args)))
   (loop [num 0]
-    (loop-over-file (nth reports num) "elapsed")
+    (with-open [rdr (io/reader (nth reports num))]
+      (doseq [line (line-seq rdr)]
+        (let [finding (find-string-in-line line "elapsed")]
+          (if (not (nil? finding))
+            (let [timer (get-execution-time-from-header finding)]
+              (println finding)
+              (def counter (+ counter timer))
+            )
+          )
+        )
+      )
+    )
     (if (< num (- (count reports) 1))
       (recur (+ num 1))
       (println num "reports found")
